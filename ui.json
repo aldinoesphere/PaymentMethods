@@ -1,0 +1,12 @@
+{
+    "defaultEntryPoint" : "index.html",
+    "namespace"         : "Payment Methods",
+    "menuEntries"       : [
+                            {
+                                "label": "General Settings",
+                                "menu": "settings/orders/paymentmethods",
+                                "urlKey": "settings-paymentmethods-general",
+                                "entryPoint": "../../../../../paymentmethods/settings/skrill_general"
+                            }
+                          ]
+}

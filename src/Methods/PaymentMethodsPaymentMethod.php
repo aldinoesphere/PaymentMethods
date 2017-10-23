@@ -3,9 +3,15 @@
 namespace PaymentMethods\Methods;
  
 use Plenty\Plugin\ConfigRepository;
+use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
+use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
+use Plenty\Plugin\Application;
+use Plenty\Plugin\Log\Loggable;
+
+use PaymentMethods\Services\PaymentMethodService;
  
 /**
  * Class PaymentMethodsPaymentMethod
@@ -13,51 +19,37 @@ use Plenty\Modules\Basket\Models\Basket;
  */
 class PaymentMethodsPaymentMethod extends PaymentMethodService
 {
+
+    protected $name = '';
+
+    protected $logoFileName = '';
+
     /**
      * Check the configuration if the payment method is active
      * Return true if the payment method is active, else return false
      *
-     * @param ConfigRepository $configRepository
-     * @param BasketRepositoryContract $basketRepositoryContract
-     * @return bool
      */
-    public function isActive( ConfigRepository $configRepository,
-                              BasketRepositoryContract $basketRepositoryContract):bool
+    public function isActive()
     {
-        /** @var bool $active */
-        $active = true;
- 
-        /** @var Basket $basket */
-        $basket = $basketRepositoryContract->load();
- 
-        /**
-         * Check the shipping profile ID. The ID can be entered in the config.json.
-         */
-        if( $configRepository->get('PaymentMethods.shippingProfileId') != $basket->shippingProfileId)
-        {
-            $active = false;
-        }
- 
-        return $active;
+        // if ($this->isEnabled())
+        // {
+        //     return true;
+        // }
+        return true;
     }
  
     /**
      * Get the name of the payment method. The name can be entered in the config.json.
      *
-     * @param ConfigRepository $configRepository
-     * @return string
      */
-    public function getName( ConfigRepository $configRepository ):string
+    public function getName()
     {
-        $name = $configRepository->get('PaymentMethods.name');
- 
-        if(!strlen($name))
+        if(!strlen($this->name))
         {
-            $name = 'Pay upon pickup';
+            return $this->name;
         }
  
-        return $name;
- 
+        return $this->name;
     }
  
     /**
@@ -66,34 +58,15 @@ class PaymentMethodsPaymentMethod extends PaymentMethodService
      * @param ConfigRepository $configRepository
      * @return string
      */
-    public function getIcon( ConfigRepository $configRepository ):string
+    public function getIcon()
     {
-        if($configRepository->get('PaymentMethods.logo') == 1)
-        {
-            return $configRepository->get('PaymentMethods.logo.url');
-        }
-        return '';
+        $app = pluginApp(Application::class);
+        $icon = $app->getUrlPath('paymentmethods').'/images/logos/'.$this->getLogoFileName();
+
+        return $icon;
     }
- 
-    /**
-     * Get the description of the payment method. The description can be entered in the config.json.
-     *
-     * @param ConfigRepository $configRepository
-     * @return string
-     */
-    public function getDescription( ConfigRepository $configRepository ):string
-    {
-        if($configRepository->get('PaymentMethods.infoPage.type') == 1)
-        {
-            return $configRepository->get('PaymentMethods.infoPage.intern');
-        }
-        elseif ($configRepository->get('PaymentMethods.infoPage.type') == 2)
-        {
-            return $configRepository->get('PaymentMethods.infoPage.extern');
-        }
-        else
-        {
-          return '';
-        }
+
+    public function getLogoFileName() {
+        return $this->logoFileName;
     }
 }
