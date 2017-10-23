@@ -1,6 +1,6 @@
 <?php
  
-namespace PayUponPickup\Methods;
+namespace PaymentMethods\Methods;
  
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -8,10 +8,10 @@ use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
  
 /**
- * Class PayUponPickupPaymentMethod
- * @package PayUponPickup\Methods
+ * Class PaymentMethodsPaymentMethod
+ * @package PaymentMethods\Methods
  */
-class PayUponPickupPaymentMethod extends PaymentMethodService
+class PaymentMethodsPaymentMethod extends PaymentMethodService
 {
     /**
      * Check the configuration if the payment method is active
@@ -33,7 +33,7 @@ class PayUponPickupPaymentMethod extends PaymentMethodService
         /**
          * Check the shipping profile ID. The ID can be entered in the config.json.
          */
-        if( $configRepository->get('PayUponPickup.shippingProfileId') != $basket->shippingProfileId)
+        if( $configRepository->get('PaymentMethods.shippingProfileId') != $basket->shippingProfileId)
         {
             $active = false;
         }
@@ -49,7 +49,7 @@ class PayUponPickupPaymentMethod extends PaymentMethodService
      */
     public function getName( ConfigRepository $configRepository ):string
     {
-        $name = $configRepository->get('PayUponPickup.name');
+        $name = $configRepository->get('PaymentMethods.name');
  
         if(!strlen($name))
         {
@@ -68,9 +68,9 @@ class PayUponPickupPaymentMethod extends PaymentMethodService
      */
     public function getIcon( ConfigRepository $configRepository ):string
     {
-        if($configRepository->get('PayUponPickup.logo') == 1)
+        if($configRepository->get('PaymentMethods.logo') == 1)
         {
-            return $configRepository->get('PayUponPickup.logo.url');
+            return $configRepository->get('PaymentMethods.logo.url');
         }
         return '';
     }
@@ -83,13 +83,13 @@ class PayUponPickupPaymentMethod extends PaymentMethodService
      */
     public function getDescription( ConfigRepository $configRepository ):string
     {
-        if($configRepository->get('PayUponPickup.infoPage.type') == 1)
+        if($configRepository->get('PaymentMethods.infoPage.type') == 1)
         {
-            return $configRepository->get('PayUponPickup.infoPage.intern');
+            return $configRepository->get('PaymentMethods.infoPage.intern');
         }
-        elseif ($configRepository->get('PayUponPickup.infoPage.type') == 2)
+        elseif ($configRepository->get('PaymentMethods.infoPage.type') == 2)
         {
-            return $configRepository->get('PayUponPickup.infoPage.extern');
+            return $configRepository->get('PaymentMethods.infoPage.extern');
         }
         else
         {

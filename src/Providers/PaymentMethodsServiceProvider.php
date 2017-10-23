@@ -1,6 +1,6 @@
 <?php
  
-namespace PayUponPickup\Providers;
+namespace PaymentMethods\Providers;
  
 use Plenty\Plugin\ServiceProvider;
 use Plenty\Plugin\Events\Dispatcher;
@@ -10,14 +10,14 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
 use Plenty\Modules\Basket\Events\Basket\AfterBasketChanged;
 use Plenty\Modules\Basket\Events\BasketItem\AfterBasketItemAdd;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodContainer;
-use PayUponPickup\Helper\PayUponPickupHelper;
-use PayUponPickup\Methods\PayUponPickupPaymentMethod;
+use PaymentMethods\Helper\PaymentMethodsHelper;
+use PaymentMethods\Methods\PaymentMethodsPaymentMethod;
  
 /**
- * Class PayUponPickupServiceProvider
- * @package PayUponPickup\Providers
+ * Class PaymentMethodsServiceProvider
+ * @package PaymentMethods\Providers
  */
-class PayUponPickupServiceProvider extends ServiceProvider
+class PaymentMethodsServiceProvider extends ServiceProvider
 {
     public function register()
     {
@@ -27,11 +27,11 @@ class PayUponPickupServiceProvider extends ServiceProvider
     /**
      * Boot additional services for the payment method
      *
-     * @param PayUponPickupHelper $paymentHelper
+     * @param PaymentMethodsHelper $paymentHelper
      * @param PaymentMethodContainer $payContainer
      * @param Dispatcher $eventDispatcher
      */
-    public function boot( PayUponPickupHelper $paymentHelper,
+    public function boot( PaymentMethodsHelper $paymentHelper,
                           PaymentMethodContainer $payContainer,
                           Dispatcher $eventDispatcher)
     {
@@ -39,7 +39,7 @@ class PayUponPickupServiceProvider extends ServiceProvider
         $paymentHelper->createMopIfNotExists();
  
         // Register the Pay upon pickup payment method in the payment method container
-        $payContainer->register('plenty_payuponpickup::PAYUPONPICKUP', PayUponPickupPaymentMethod::class,
+        $payContainer->register('plenty_paymentmethods::PAYMENTMETHODS', PaymentMethodsPaymentMethod::class,
                               [ AfterBasketChanged::class, AfterBasketItemAdd::class, AfterBasketCreate::class ]
         );
  
